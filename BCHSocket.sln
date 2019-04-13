@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.329
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCHSocket", "BCHSocket\BCHSocket.csproj", "{78BFC33A-1064-4FE3-92DB-51ED73EE2EC8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{78BFC33A-1064-4FE3-92DB-51ED73EE2EC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78BFC33A-1064-4FE3-92DB-51ED73EE2EC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78BFC33A-1064-4FE3-92DB-51ED73EE2EC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78BFC33A-1064-4FE3-92DB-51ED73EE2EC8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3AAC1BC7-6880-40EE-916C-0471870A3243}
+	EndGlobalSection
+EndGlobal
