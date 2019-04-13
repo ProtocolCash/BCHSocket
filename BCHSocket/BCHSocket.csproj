@@ -9,4 +9,8 @@
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\SharpBCH\SharpBCH\SharpBCH\SharpBCH.csproj" />
+  </ItemGroup>
+
 </Project>
