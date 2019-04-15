@@ -21,6 +21,7 @@
  *
  */
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -29,32 +30,35 @@ namespace BCHSocket.Consumer
     /// <summary>
     ///     A consumer thread that waits for queued tasks and does processing when tasks are queued
     /// </summary>
-    public abstract class Consumer<T>
+    public abstract class Consumer<T, T2> :  IDisposable
     {
         private readonly object _locker = new object();
         private readonly Queue<T> _tasks = new Queue<T>();
-        private readonly EventWaitHandle _wh = new AutoResetEvent(false);
         private readonly Thread _worker;
+        protected readonly Action<T2> CallbackAction;
 
         /// <summary>
         ///     Constructor
         ///     - Starts threaded consumer worker
         /// </summary>
-        protected Consumer()
+        protected Consumer(Action<T2> callbackAction)
         {
+            CallbackAction = callbackAction;
             // Start the worker thread
             _worker = new Thread(Work);
             _worker.Start();
         }
 
+        /// <summary>
+        ///     Consumer Disposal
+        ///     - Tell the work queue to exit, wait, and cleanup
+        /// </summary>
         public void Dispose()
         {
             // Signal the consumer to exit.
             EnqueueTask(default(T), 0);
             // Wait for the consumer's thread to finish.
             _worker.Join();
-            // Release any OS resources.
-            _wh.Close();
         }
 
         /// <summary>
@@ -67,9 +71,8 @@ namespace BCHSocket.Consumer
             lock (_locker)
             {
                 _tasks.Enqueue(data);
+                Monitor.Pulse(_locker);
             }
-
-            _wh.Set();
         }
 
         /// <summary>
@@ -80,20 +83,21 @@ namespace BCHSocket.Consumer
         {
             while (true)
             {
-                var data = default(T);
+                T data;
+
                 lock (_locker)
                 {
-                    if (_tasks.Count > 0)
-                    {
-                        data = _tasks.Dequeue();
-                        if (data == null) return;
-                    }
+                    while (_tasks.Count == 0)
+                        Monitor.Wait(_locker);
+
+                    data = _tasks.Dequeue();
                 }
 
-                if (data != null)
-                    DoWork(data);
-                else
-                    _wh.WaitOne(); // No more tasks - wait for a signal
+                if (data.Equals(default(T))) return;
+
+                var result = DoWork(data);
+                if (result != null)
+                    CallbackAction(result);
             }
         }
 
@@ -102,6 +106,6 @@ namespace BCHSocket.Consumer
         ///     - handles the actual data processing as required
         /// </summary>
         /// <param name="data"></param>
-        public abstract void DoWork(T data);
+        protected abstract T2 DoWork(T data);
     }
 }

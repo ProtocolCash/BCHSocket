@@ -1,4 +1,5 @@
-﻿/*
+﻿using System.Configuration;
+/*
  * Copyright (c) 2019 ProtocolCash
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,45 +22,24 @@
  *
  */
 
-using System;
-using SharpBCH.Block;
-
-namespace BCHSocket.Consumer
-{    
-    /// <inheritdoc />
+namespace BCHSocket
+{
     /// <summary>
-    ///     Implements a consumer thread that decodes raw bitcoin blocks
+    ///     Static config utility
+    ///     - uses ConfigurationManager to read App.config file
     /// </summary>
-    public class BlockConsumer : Consumer<byte[], Block>
+    public static class Config
     {
-        public BlockConsumer(Action<Block> callbackAction) : base(callbackAction)
+        public static string GetConfigString(string key)
         {
+            return ConfigurationManager.AppSettings[key];
         }
 
-        /// <inheritdoc />
-        /// <summary>
-        ///     Processes raw bitcoin block
-        ///     - decodes the block, transactions, output scripts, and output addresses
-        /// </summary>
-        /// <param name="data">raw block byte array</param>
-        protected override Block DoWork(byte[] data)
+        public static int GetConfigInt(string key)
         {
-            Block block;
-            try
-            {
-                block = new Block(data);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Unable to decode block! " + e.Message);
-                return null;
-            }
-
-            Console.WriteLine("Received Block with " + block.Transactions.Length + " transactions.\n" +
-                              " Previous Block: " + block.Header.PrevBlockHash + "\n" +
-                              " Block Hash: " + block.BlockHash);
-
-            return block;
+            // if valid int return same, else return 0
+            return int.TryParse(ConfigurationManager.AppSettings[key], out var ret) ? ret : 0;
         }
+
     }
 }

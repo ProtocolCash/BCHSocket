@@ -31,14 +31,18 @@ namespace BCHSocket.Consumer
     /// <summary>
     ///     Implements a consumer thread that decodes raw bitcoin transactions
     /// </summary>
-    public class TransactionConsumer : Consumer<byte[]>
+    public class TransactionConsumer : Consumer<byte[], Transaction>
     {
+        public TransactionConsumer(Action<Transaction> callbackAction) : base(callbackAction)
+        {
+        }
+
         /// <summary>
         ///     Processes raw bitcoin transactions
         ///     - decodes the transaction, output scripts, and output addresses
         /// </summary>
         /// <param name="data">raw transaction byte array</param>
-        public override void DoWork(byte[] data)
+        protected override Transaction DoWork(byte[] data)
         {
             // hex version of the transaction
             var txHex = ByteHexConverter.ByteArrayToHex(data);
@@ -52,10 +56,10 @@ namespace BCHSocket.Consumer
             catch (Exception e)
             {
                 Console.WriteLine("Unable to decode transaction: \n" + txHex + "\n" + e.Message);
-                return;
+                return null;
             }
 
-            // TODO: do something with the transactions...
+            return transaction;
         }
     }
 }
