@@ -22,7 +22,7 @@
  */
 
 using System;
-using BCHSocket.Util;
+using SharpBCH.Util;
 using SharpBCH.CashAddress;
 
 namespace BCHSocket.Subscriptions

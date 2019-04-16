@@ -22,7 +22,7 @@
  */
 
 using System.Linq;
-using BCHSocket.Util;
+using SharpBCH.Util;
 
 namespace BCHSocket.Subscriptions
 {    
