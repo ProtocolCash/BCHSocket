@@ -1,5 +1,4 @@
-﻿using System.Configuration;
-/*
+﻿/*
  * Copyright (c) 2019 ProtocolCash
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,6 +21,8 @@
  *
  */
 
+using System.Configuration;
+
 namespace BCHSocket
 {
     /// <summary>
@@ -30,11 +31,21 @@ namespace BCHSocket
     /// </summary>
     public static class Config
     {
+        /// <summary>
+        ///     Get a string property at the given key
+        /// </summary>
+        /// <param name="key">AppSetting key</param>
+        /// <returns>string property at key</returns>
         public static string GetConfigString(string key)
         {
             return ConfigurationManager.AppSettings[key];
         }
 
+        /// <summary>
+        ///     Gets a property at the given key and converts to int
+        /// </summary>
+        /// <param name="key">AppSetting key</param>
+        /// <returns>integer at key or 0 if not a valid integer</returns>
         public static int GetConfigInt(string key)
         {
             // if valid int return same, else return 0
