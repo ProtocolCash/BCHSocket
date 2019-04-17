@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCHSocket", "BCHSocket\BCHSocket.csproj", "{78BFC33A-1064-4FE3-92DB-51ED73EE2EC8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpBCH", "..\..\SharpBCH\SharpBCH\SharpBCH\SharpBCH.csproj", "{84A319F4-2A34-4C8E-9D49-9E01C724B683}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpBCH", "..\SharpBCH\SharpBCH\SharpBCH\SharpBCH.csproj", "{84A319F4-2A34-4C8E-9D49-9E01C724B683}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
