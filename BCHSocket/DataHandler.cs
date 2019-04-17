@@ -99,6 +99,8 @@ namespace BCHSocket
                         .GetSocketsWithSubscription(new OpReturnSubscription(output.GetOpReturnData(16))));
             }
 
+            subscribedSockets.AddRange(_subscriptionHandler.GetSocketsWithSubscription(new TransactionSubscription()));
+
             Console.WriteLine("Transaction Detected! TXID: " + transaction.TXIDHex + ". Inputs: " + transaction.Inputs.Length + 
                               ". Outputs: " + transaction.Outputs.Length + ". Broadcast to: " + subscribedSockets.Count + " clients.");
 

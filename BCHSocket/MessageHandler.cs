@@ -14,9 +14,11 @@ namespace BCHSocket
         /// <summary>
         ///     Handles json messages:
         ///         {"op": "block"}
+        ///         {"op": "transaction"}
         ///         {"op": "address", "address": "[CASH_ADDRESS]"}
         ///         {"op": "opreturn", "prefix": "[PREFIX(HEX)]"}
         ///         {"op": "rm_block"}
+        ///         {"op": "rm_transaction"}
         ///         {"op": "rm_address", "address": "[CASH_ADDRESS]"}
         ///         {"op": "rm_opreturn", "prefix": "[PREFIX(HEX)]"}
         ///     - Validates json
@@ -77,6 +79,20 @@ namespace BCHSocket
                 socket.Send(subscriptionHandler.RemoveSubscription(socket, new BlockSubscription())
                     ? "{ \"op\": \"rm_block\", \"result\": \"ok\" }"
                     : "{ \"op\": \"rm_block\", \"result\": \"failed\" }");
+            }
+
+            // transaction subscriptions
+            else if (jObject["op"].ToString().Equals("transaction", StringComparison.CurrentCultureIgnoreCase))
+            {
+                subscriptionHandler.AddSubscription(socket, new BlockSubscription());
+                socket.Send("{ \"op\": \"transaction\", \"result\": \"ok\" }");
+            }
+            // transaction un-subscribe
+            else if (jObject["op"].ToString().Equals("rm_transaction", StringComparison.CurrentCultureIgnoreCase))
+            {
+                socket.Send(subscriptionHandler.RemoveSubscription(socket, new BlockSubscription())
+                    ? "{ \"op\": \"rm_transaction\", \"result\": \"ok\" }"
+                    : "{ \"op\": \"rm_transaction\", \"result\": \"failed\" }");
             }
 
             // address subscriptions

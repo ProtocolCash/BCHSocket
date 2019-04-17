@@ -21,32 +21,32 @@
  *
  */
 
-using System;
-using System.Diagnostics.CodeAnalysis;
-
 namespace BCHSocket.Subscriptions
-{
+{    
     /// <summary>
-    ///     Represents a subscription by a websocket client to a given broadcast type/filter
+    ///     Represents a broadcast subscription for blocks
     /// </summary>
-    public abstract class Subscription : IComparable
+    public class TransactionSubscription : Subscription
     {
-        public SubscriptionType Type { get; }
-
-        protected Subscription(SubscriptionType subscriptionType)
+        /// <summary>
+        ///     Constructor
+        /// </summary>
+        public TransactionSubscription() : base(SubscriptionType.transaction)
         {
-            Type = subscriptionType;
         }
 
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public enum SubscriptionType
+        /// <summary>
+        ///     Compares two Subscription objects
+        ///     - different if type differs
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override int CompareTo(object obj)
         {
-            address,
-            opreturn,
-            block,
-            transaction
-        }
+            if (obj.GetType() == typeof(TransactionSubscription))
+                return 0;
 
-        public abstract int CompareTo(object obj);
+            return -1;
+        }
     }
 }
