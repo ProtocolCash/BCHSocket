@@ -84,13 +84,13 @@ namespace BCHSocket
             // transaction subscriptions
             else if (jObject["op"].ToString().Equals("transaction", StringComparison.CurrentCultureIgnoreCase))
             {
-                subscriptionHandler.AddSubscription(socket, new BlockSubscription());
+                subscriptionHandler.AddSubscription(socket, new TransactionSubscription());
                 socket.Send("{ \"op\": \"transaction\", \"result\": \"ok\" }");
             }
             // transaction un-subscribe
             else if (jObject["op"].ToString().Equals("rm_transaction", StringComparison.CurrentCultureIgnoreCase))
             {
-                socket.Send(subscriptionHandler.RemoveSubscription(socket, new BlockSubscription())
+                socket.Send(subscriptionHandler.RemoveSubscription(socket, new TransactionSubscription())
                     ? "{ \"op\": \"rm_transaction\", \"result\": \"ok\" }"
                     : "{ \"op\": \"rm_transaction\", \"result\": \"failed\" }");
             }

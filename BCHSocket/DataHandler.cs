@@ -119,8 +119,9 @@ namespace BCHSocket
         {
             try
             {
-                var outputs = transaction.Outputs.Aggregate(", ", (current, output) =>
-                    current + "{ \"type\": \"" + output.Type.ToString() + "\", \"address\": \"" + output.Address + "\", \"value\": \"" + output.Value + "\", \"script\": \"" + output.ScriptDataHex + "\" }");
+                var outputs = transaction.Outputs.Aggregate("", (current, output) => current + ("{ \"type\": \"" + output.Type + "\", \"address\": \"" + output.Address + "\", \"value\": \"" + output.Value + "\", \"script\": \"" + output.ScriptDataHex + "\" }, "));
+
+                outputs = outputs.Substring(0, outputs.Length - 2);
 
                 socket.Send("{ \"op\": \"new_tx\", \"txid\": \"" + transaction.TXIDHex + "\", " +
                             "\"inputs\": " + transaction.Inputs.Length + ", \"outputs\": [ " +
