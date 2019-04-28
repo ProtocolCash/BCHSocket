@@ -29,6 +29,7 @@ using BCHSocket.Websocket;
 using SharpBCH;
 using SharpBCH.Block;
 using SharpBCH.CashAddress;
+using SharpBCH.SLP;
 using SharpBCH.Transaction;
 
 namespace BCHSocket
@@ -94,9 +95,27 @@ namespace BCHSocket
                         .GetSocketsWithSubscription(new AddressSubscription(
                             new DecodedBitcoinAddress("bitcoincash", output.Type, output.GetHash160()))));
 
-                if (output.Type == ScriptType.DATA)
-                    subscribedSockets.AddRange(_subscriptionHandler
-                        .GetSocketsWithSubscription(new OpReturnSubscription(output.GetOpReturnData(16))));
+                if (output.Type != ScriptType.DATA) continue;
+
+                subscribedSockets.AddRange(_subscriptionHandler
+                    .GetSocketsWithSubscription(new OpReturnSubscription(output.GetOpReturnData()[0])));
+                // watch for SLP transactions:
+                if (!TokenType1.DoesScriptHaveValidHeader(output.Script)) continue;
+
+                try
+                {
+                    // try to decode the SLP message
+                    var slpMsg = TokenType1.ReadSLPScript(output.Script);
+                    Console.WriteLine("SLP message! " + slpMsg);
+                }
+                catch (InvalidSLPScriptException e)
+                {
+                    Console.WriteLine("SLP Transaction Detected, but failed to decode. TXID: " + transaction.TXIDHex);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("SLP Transaction Detected, but EXCEPTION occured during decoding. TXID: " + transaction.TXIDHex);
+                }
             }
 
             subscribedSockets.AddRange(_subscriptionHandler.GetSocketsWithSubscription(new TransactionSubscription()));
@@ -119,7 +138,7 @@ namespace BCHSocket
         {
             try
             {
-                var outputs = transaction.Outputs.Aggregate("", (current, output) => current + ("{ \"type\": \"" + output.Type + "\", \"address\": \"" + output.Address + "\", \"value\": \"" + output.Value + "\", \"script\": \"" + output.ScriptDataHex + "\" }, "));
+                var outputs = transaction.Outputs.Aggregate("", (current, output) => current + ("{ \"type\": \"" + output.Type + "\", \"address\": \"" + output.Address + "\", \"value\": \"" + output.Value + "\", \"script\": \"" + output.ScriptHex + "\" }, "));
 
                 outputs = outputs.Substring(0, outputs.Length - 2);
 
